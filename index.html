@@ -1,0 +1,3614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mundo del Agua">
+    <meta name="application-name" content="El Mundo del Agua">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>El Mundo del Agua - S-CALA</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fredoka', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 60%, #4facfe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+            animation: backgroundShift 12s ease-in-out infinite alternate;
+            box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+            50% { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%); }
+            100% { background: linear-gradient(135deg, #fa709a 0%, #fee140 50%, #667eea 100%); }
+        }
+
+        /* Partículas más coloridas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float-up 15s infinite linear;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Logo S-CALA más colorido */
+        .loading-screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d, #43e97b);
+            background-size: 400% 400%;
+            animation: gradientMove 8s ease-in-out infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1.5s ease-out;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 50px rgba(255, 255, 255, 0.2);
+            animation: pulse 2s infinite, rotate 20s linear infinite;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), rgba(52, 152, 219, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .logo-icon {
+            font-size: 60px;
+            background: linear-gradient(45deg, #3498db, #2ecc71, #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+            animation: iconPulse 3s infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c, #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            z-index: 1;
+            animation: textGlow 4s infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+            50% { filter: hue-rotate(180deg) brightness(1.2); }
+        }
+
+        .brand {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-top: 15px;
+            letter-spacing: 1px;
+            animation: brandGlow 5s infinite alternate;
+        }
+
+        @keyframes brandGlow {
+            0% { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.5); }
+            100% { text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 50px rgba(255, 255, 255, 0.2); }
+            50% { transform: scale(1.05); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 255, 255, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 50px rgba(255, 255, 255, 0.2); }
+        }
+
+        /* Sistema de Recompensas más colorido */
+        .reward-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.8), rgba(52,152,219,0.3), rgba(0,0,0,0.8));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .reward-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .reward-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            max-width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 50px rgba(255, 255, 255, 0.2);
+            transform: scale(0.8);
+            transition: transform 0.5s ease;
+            position: relative;
+            z-index: 10;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .reward-content::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db, #2ecc71);
+            border-radius: 20px;
+            z-index: -1;
+            animation: borderGlow 3s infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .reward-overlay.active .reward-content {
+            transform: scale(1);
+        }
+
+        .reward-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            animation: titleShimmer 2s infinite;
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+        }
+
+        .reward-message {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        .stars-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .star {
+            font-size: 40px;
+            color: #ddd;
+            transition: all 0.3s ease;
+            transform: scale(0);
+            filter: drop-shadow(0 0 10px rgba(241, 196, 15, 0.5));
+        }
+
+        .star.earned {
+            color: #f1c40f;
+            transform: scale(1);
+            animation: starPulse 0.5s ease, starGlow 2s infinite alternate, starFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes starPulse {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes starGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(241, 196, 15, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(241, 196, 15, 1)); }
+        }
+
+        @keyframes starFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+        }
+
+
+        .reward-button {
+            background: linear-gradient(135deg, #2ecc71, #27ae60, #16a085);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+            width: 100%;
+            max-width: 200px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .reward-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, #27ae60, #2ecc71, #1abc9c);
+        }
+
+        /* Navegación más colorida */
+        .game-nav {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.9));
+            border: none;
+            border-radius: 20px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 100px;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-button.active {
+            background: linear-gradient(135deg, #3498db, #9b59b6, #e74c3c);
+            color: white;
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            animation: navGlow 3s infinite alternate;
+        }
+
+        @keyframes navGlow {
+            0% { box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
+            100% { box-shadow: 0 6px 20px rgba(155, 89, 182, 0.6); }
+        }
+
+        /* Escena principal más colorida */
+        .scene {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            padding: 10px;
+            padding-bottom: 60px;
+        }
+
+        .game-title {
+            font-size: 38px;
+            font-weight: 900;
+            background: linear-gradient(45deg, 
+                #ff6b6b 0%, 
+                #feca57 20%, 
+                #48dbfb 40%, 
+                #ff9ff3 60%, 
+                #54a0ff 80%, 
+                #5f27cd 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: titleShine 3s ease-in-out infinite alternate;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            animation: titleRainbow 8s infinite, titleFloat 4s ease-in-out infinite;
+            line-height: 1.2;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes titleRainbow {
+            0%, 100% { filter: hue-rotate(0deg) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
+            50% { filter: hue-rotate(180deg) drop-shadow(0 0 15px rgba(255, 255, 255, 0.5)); }
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes titleShine {
+            0% { 
+                text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+                filter: brightness(1);
+            }
+            100% { 
+                text-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+                filter: brightness(1.2);
+            }
+        }
+
+        .game-container {
+            display: none;
+            width: 100%;
+            max-width: 100%;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .game-container.active {
+            display: flex;
+        }
+
+        /* Laboratorio más colorido */
+        .laboratory {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.9));
+            border-radius: 25px;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.2), 
+                0 0 60px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            margin-bottom: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            outline: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .laboratory::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.03), rgba(155, 89, 182, 0.03), rgba(46, 204, 113, 0.03));
+            animation: labGlow 8s infinite;
+        }
+
+        @keyframes labGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .lab-header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .lab-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #2c3e50, #3498db, #9b59b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 5px;
+            animation: labTitleGlow 4s infinite;
+        }
+
+        @keyframes labTitleGlow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(90deg); }
+        }
+
+        .lab-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .lab-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .thermometer-section {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .thermometer-container {
+            width: 70px;
+            height: 300px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef, #dee2e6);
+            border-radius: 35px;
+            border: 5px solid #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 18px 10px;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.25), 
+                0 0 60px rgba(255, 255, 255, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            backdrop-filter: blur(15px);
+            animation: thermometerFloat 4s ease-in-out infinite;
+            outline: 2px solid rgba(44, 62, 80, 0.3);
+        }
+
+        @keyframes thermometerFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .thermometer {
+            width: 30px;
+            height: 220px;
+            background: linear-gradient(135deg, #ecf0f1, #bdc3c7, #95a5a6);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .mercury {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(to top, 
+                #ff4757 0%, 
+                #ff6b35 15%, 
+                #ffa502 30%, 
+                #ffd32a 45%, 
+                #7bed9f 60%, 
+                #70a1ff 75%, 
+                #5352ed 90%, 
+                #3742fa 100%);
+            border-radius: 15px;
+            transition: height 1s ease, background 1s ease;
+            box-shadow: 
+                0 0 30px rgba(52, 152, 219, 0.8),
+                inset 0 0 10px rgba(255, 255, 255, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.5);
+            animation: mercuryGlow 3s infinite alternate, mercuryBubble 2s infinite;
+        }
+
+        @keyframes mercuryGlow {
+            0% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.6); }
+            100% { box-shadow: 0 0 30px rgba(52, 152, 219, 0.9); }
+        }
+
+        @keyframes mercuryBubble {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.02); }
+        }
+
+        .thermometer-numbers {
+            position: absolute;
+            right: -25px;
+            top: 0;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .thermometer-numbers span {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8));
+            padding: 2px 6px;
+            border-radius: 8px;
+            border: 1px solid rgba(44, 62, 80, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .explosion {
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, 
+                rgba(255, 0, 0, 0.9) 0%, 
+                rgba(255, 165, 0, 0.8) 20%, 
+                rgba(255, 255, 0, 0.7) 40%, 
+                rgba(255, 255, 255, 0.5) 60%, 
+                transparent 100%);
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .explosion.active {
+            animation: explode 2s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { 
+                transform: scale(0) rotate(0deg); 
+                opacity: 1; 
+            }
+            25% { 
+                transform: scale(1.5) rotate(90deg); 
+                opacity: 0.9; 
+            }
+            50% { 
+                transform: scale(3) rotate(180deg); 
+                opacity: 0.7; 
+            }
+            75% { 
+                transform: scale(4.5) rotate(270deg); 
+                opacity: 0.4; 
+            }
+            100% { 
+                transform: scale(6) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .explosion-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .explosion-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #f1c40f, #e67e22);
+            border-radius: 50%;
+            animation: particleFly 1.5s ease-out forwards;
+        }
+
+        @keyframes particleFly {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .temperature-labels {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .temperature-indicator {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8));
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            text-align: center;
+            min-width: 80px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .water-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            width: 100%;
+        }
+
+        .container {
+            width: 220px;
+            height: 260px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.98) 0%, 
+                rgba(240, 248, 255, 0.95) 20%,
+                rgba(230, 244, 255, 0.9) 40%,
+                rgba(200, 230, 255, 0.85) 60%,
+                rgba(180, 220, 255, 0.8) 80%,
+                rgba(160, 210, 255, 0.75) 100%);
+            border: 6px solid transparent;
+            background-clip: padding-box;
+            border-radius: 0 0 45px 45px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.15), 
+                0 0 50px rgba(255, 255, 255, 0.2),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            animation: containerGlow 6s ease-in-out infinite;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, 
+                #3498db, #9b59b6, #e74c3c, #f39c12, 
+                #2ecc71, #1abc9c, #34495e, #3498db);
+            background-size: 400% 400%;
+            border-radius: 0 0 40px 40px;
+            z-index: -1;
+            animation: borderRainbow 8s ease-in-out infinite;
+        }
+
+        @keyframes containerGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 15px 40px rgba(0, 0, 0, 0.15), 
+                    0 0 50px rgba(255, 255, 255, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 20px 50px rgba(0, 0, 0, 0.2), 
+                    0 0 60px rgba(255, 255, 255, 0.3),
+                    inset 0 0 25px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        @keyframes borderRainbow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .state-label {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .state-label.visible {
+            opacity: 1;
+        }
+
+        .state-label.ice {
+            background: linear-gradient(to right, rgba(52, 152, 219, 0.8), rgba(41, 128, 185, 0.8));
+            padding: 5px 0;
+            border-radius: 15px;
+            animation: iceGlow 2s infinite alternate;
+        }
+
+        @keyframes iceGlow {
+            0% { background: linear-gradient(to right, rgba(52, 152, 219, 0.8), rgba(41, 128, 185, 0.8)); }
+            100% { background: linear-gradient(to right, rgba(41, 128, 185, 0.9), rgba(52, 152, 219, 0.9)); }
+        }
+
+        .state-label.water {
+            background: linear-gradient(to right, rgba(46, 204, 113, 0.8), rgba(39, 174, 96, 0.8));
+            padding: 5px 0;
+            border-radius: 15px;
+            animation: waterGlow 2s infinite alternate;
+        }
+
+        @keyframes waterGlow {
+            0% { background: linear-gradient(to right, rgba(46, 204, 113, 0.8), rgba(39, 174, 96, 0.8)); }
+            100% { background: linear-gradient(to right, rgba(39, 174, 96, 0.9), rgba(46, 204, 113, 0.9)); }
+        }
+
+        .state-label.vapor {
+            background: linear-gradient(to right, rgba(243, 156, 18, 0.8), rgba(230, 126, 34, 0.8));
+            padding: 5px 0;
+            border-radius: 15px;
+            animation: vaporGlow 2s infinite alternate;
+        }
+
+        @keyframes vaporGlow {
+            0% { background: linear-gradient(to right, rgba(243, 156, 18, 0.8), rgba(230, 126, 34, 0.8)); }
+            100% { background: linear-gradient(to right, rgba(230, 126, 34, 0.9), rgba(243, 156, 18, 0.9)); }
+        }
+
+        .goti {
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle at 30% 30%, 
+                #85c1e9 0%, 
+                #5dade2 30%, 
+                #3498db 60%, 
+                #2980b9 100%);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(45deg);
+            position: relative;
+            transition: all 1s ease;
+            box-shadow: 
+                0 15px 35px rgba(52, 152, 219, 0.5),
+                0 0 30px rgba(52, 152, 219, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.4);
+            animation: float 3s ease-in-out infinite, waterShimmer 4s ease-in-out infinite;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .goti::before {
+            content: '💧';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            animation: waterHighlight 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(52, 152, 219, 0.6));
+            z-index: 2;
+        }
+
+        @keyframes float {
+            0% { transform: rotate(45deg) translateY(0px) scale(1); }
+            50% { transform: rotate(45deg) translateY(-15px) scale(1.05); }
+            100% { transform: rotate(45deg) translateY(0px) scale(1); }
+        }
+
+        @keyframes waterShimmer {
+            0%, 100% { 
+                box-shadow: 
+                    0 15px 35px rgba(52, 152, 219, 0.5),
+                    0 0 30px rgba(52, 152, 219, 0.3),
+                    inset 0 0 20px rgba(255, 255, 255, 0.4);
+            }
+            50% { 
+                box-shadow: 
+                    0 20px 40px rgba(52, 152, 219, 0.7),
+                    0 0 40px rgba(52, 152, 219, 0.5),
+                    inset 0 0 25px rgba(255, 255, 255, 0.6);
+            }
+        }
+
+        @keyframes waterHighlight {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .goti.ice {
+            background: linear-gradient(135deg, 
+                #d6eaf8 0%, 
+                #aed6f1 30%, 
+                #85c1e9 60%, 
+                #5dade2 100%);
+            border-radius: 15px;
+            transform: rotate(0deg);
+            box-shadow: 
+                0 0 25px rgba(174, 214, 241, 0.8),
+                0 0 40px rgba(174, 214, 241, 0.4),
+                inset 0 0 15px rgba(255, 255, 255, 0.6);
+            animation: iceFloat 2s ease-in-out infinite, iceSparkle 3s ease-in-out infinite;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .goti.ice::before {
+            content: '🧊';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            animation: iceSparkle 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(174, 214, 241, 0.8));
+        }
+
+        @keyframes iceFloat {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(0deg) scale(1.08); }
+        }
+
+        @keyframes iceSparkle {
+            0%, 100% { 
+                opacity: 0.8; 
+                transform: translate(-50%, -50%) scale(1);
+                filter: brightness(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.2);
+                filter: brightness(1.3);
+            }
+        }
+
+        .goti.vapor {
+            background: radial-gradient(circle, 
+                rgba(255, 255, 255, 0.9) 0%, 
+                rgba(236, 240, 241, 0.7) 50%, 
+                rgba(189, 195, 199, 0.4) 100%);
+            border-radius: 50%;
+            transform: scale(0.4) translateY(-120px);
+            opacity: 0.8;
+            animation: vaporFloat 2s ease-in-out infinite, vaporGlow 3s ease-in-out infinite;
+            box-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .goti.vapor::before {
+            content: '☁️';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            animation: vaporFloat 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+        }
+
+        @keyframes vaporFloat {
+            0% { 
+                transform: scale(0.4) translateY(-120px) rotate(0deg); 
+                opacity: 0.8; 
+            }
+            50% { 
+                transform: scale(0.5) translateY(-140px) rotate(180deg); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: scale(0.4) translateY(-120px) rotate(360deg); 
+                opacity: 0.8; 
+            }
+        }
+
+        @keyframes vaporGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px rgba(255, 255, 255, 0.6),
+                    0 0 40px rgba(255, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 30px rgba(255, 255, 255, 0.8),
+                    0 0 60px rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .cloud {
+            position: absolute;
+            top: 40px;
+            width: 200px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef);
+            border-radius: 100px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            cursor: pointer;
+            animation: cloudFloat 4s ease-in-out infinite, cloudGlow 6s ease-in-out infinite;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.1), 
+                0 0 40px rgba(255, 255, 255, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes cloudFloat {
+            0% { transform: translateX(0px) translateY(0px); }
+            25% { transform: translateX(10px) translateY(-5px); }
+            50% { transform: translateX(0px) translateY(-10px); }
+            75% { transform: translateX(-10px) translateY(-5px); }
+            100% { transform: translateX(0px) translateY(0px); }
+        }
+
+        @keyframes cloudGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 15px 35px rgba(0, 0, 0, 0.1), 
+                    0 0 40px rgba(255, 255, 255, 0.4),
+                    inset 0 0 20px rgba(255, 255, 255, 0.6);
+            }
+            50% { 
+                box-shadow: 
+                    0 20px 45px rgba(0, 0, 0, 0.15), 
+                    0 0 60px rgba(255, 255, 255, 0.6),
+                    inset 0 0 30px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        .cloud:before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: 25px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef);
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cloud:after {
+            content: '';
+            position: absolute;
+            top: -25px;
+            right: 25px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa, #e9ecef);
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cloud.visible {
+            opacity: 0.95;
+        }
+
+        .cloud.evaporating {
+            animation: cloudEvaporate 3s ease-out forwards;
+        }
+
+        @keyframes cloudEvaporate {
+            0% { 
+                opacity: 0.95; 
+                transform: scale(1) translateY(0px); 
+            }
+            50% { 
+                opacity: 0.7; 
+                transform: scale(1.1) translateY(-20px); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: scale(0.3) translateY(-100px); 
+            }
+        }
+
+        .rain {
+            position: absolute;
+            top: 130px;
+            width: 100%;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .rain.visible {
+            opacity: 1;
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 6px;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent, #5dade2, #3498db, #2980b9);
+            border-radius: 0 0 50% 50%;
+            animation: fall 1.5s linear infinite;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.6);
+        }
+
+        @keyframes fall {
+            0% { 
+                transform: translateY(-30px) scale(0.8); 
+                opacity: 0; 
+            }
+            20% { 
+                opacity: 1; 
+                transform: translateY(0px) scale(1); 
+            }
+            80% { 
+                opacity: 1; 
+                transform: translateY(160px) scale(1); 
+            }
+            100% { 
+                transform: translateY(200px) scale(0.8); 
+                opacity: 0; 
+            }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .control-button {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 55px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(255, 255, 255, 0.3),
+                inset 0 3px 6px rgba(255, 255, 255, 0.7),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.1);
+            outline: 3px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .control-button:active:before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
+        }
+
+        .control-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .sun-button {
+            background: linear-gradient(135deg, #f1c40f, #f39c12, #e67e22);
+            animation: sunGlow 3s infinite alternate;
+        }
+
+        @keyframes sunGlow {
+            0% { box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); }
+            100% { box-shadow: 0 10px 30px rgba(241, 196, 15, 0.6); }
+        }
+
+        .snow-button {
+            background: linear-gradient(135deg, #3498db, #2980b9, #1abc9c);
+            animation: snowGlow 3s infinite alternate;
+        }
+
+        @keyframes snowGlow {
+            0% { box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3); }
+            100% { box-shadow: 0 10px 30px rgba(52, 152, 219, 0.6); }
+        }
+
+        .status-text {
+            position: absolute;
+            bottom: 15px;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8));
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10;
+            padding: 0 10px;
+            animation: footerGlow 5s infinite;
+        }
+
+        @keyframes footerGlow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+        }
+
+        /* Juego de Clasificación más colorido */
+        .classification-game {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.85));
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .game-instructions {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.3;
+            animation: instructionsGlow 4s infinite;
+        }
+
+        @keyframes instructionsGlow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(120deg); }
+        }
+
+        .classification-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .state-category {
+            width: 100%;
+            max-width: 280px;
+            height: 120px;
+            border: 4px dashed #34495e;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(248, 249, 250, 0.6));
+            position: relative;
+            overflow: hidden;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .state-category.solid {
+            border-color: #3498db;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+            animation: solidGlow 3s infinite alternate;
+        }
+
+        @keyframes solidGlow {
+            0% { box-shadow: 0 0 15px rgba(52, 152, 219, 0.3); }
+            100% { box-shadow: 0 0 25px rgba(52, 152, 219, 0.5); }
+        }
+
+        .state-category.liquid {
+            border-color: #2ecc71;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+            animation: liquidGlow 3s infinite alternate;
+        }
+
+        @keyframes liquidGlow {
+            0% { box-shadow: 0 0 15px rgba(46, 204, 113, 0.3); }
+            100% { box-shadow: 0 0 25px rgba(46, 204, 113, 0.5); }
+        }
+
+        .state-category.gas {
+            border-color: #f39c12;
+            box-shadow: 0 0 15px rgba(243, 156, 18, 0.3);
+            animation: gasGlow 3s infinite alternate;
+        }
+
+        @keyframes gasGlow {
+            0% { box-shadow: 0 0 15px rgba(243, 156, 18, 0.3); }
+            100% { box-shadow: 0 0 25px rgba(243, 156, 18, 0.5); }
+        }
+
+        .state-category.drag-over {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8));
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .state-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .state-category.solid .state-title {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .state-category.liquid .state-title {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .state-category.gas .state-title {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .state-icon {
+            font-size: 50px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+        }
+
+        .items-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .draggable-item {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: grab;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .draggable-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .draggable-item:hover:before {
+            transform: translateX(100%);
+        }
+
+        .draggable-item:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+
+        .draggable-item.correct {
+            animation: correctPulse 0.6s ease;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .game-result {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 15px;
+            text-align: center;
+            height: 30px;
+        }
+
+        .reset-button {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 200px;
+            justify-content: center;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Juego de Memoria más colorido */
+        .memory-game {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.85));
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .memory-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(248, 249, 250, 0.7));
+            border-radius: 15px;
+            padding: 10px 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 100px;
+            flex: 1;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: statGlow 3s infinite;
+        }
+
+        @keyframes statGlow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 3px;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .memory-card {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .memory-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .memory-card.flipped {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            cursor: default;
+            animation: matchPulse 0.6s ease;
+            transform: scale(0.95);
+        }
+
+        @keyframes matchPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0.95); }
+        }
+
+        .memory-card .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            backface-visibility: hidden;
+            transition: opacity 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .memory-card.flipped .card-back,
+        .memory-card.matched .card-back {
+            opacity: 0;
+        }
+
+        .memory-card .card-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            backface-visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .memory-card.flipped .card-front,
+        .memory-card.matched .card-front {
+            opacity: 1;
+        }
+
+        .memory-card.matched .card-front {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        /* Juego de Secuencia */
+        .sequence-game {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.85));
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sequence-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sequence-display {
+            width: 100%;
+            max-width: 300px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(248, 249, 250, 0.7));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sequence-pattern {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .sequence-pattern-item {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .sequence-pattern-item.active {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: sequenceGlow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes sequenceGlow {
+            0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+            100% { box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4); }
+        }
+
+        .sequence-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .sequence-button {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 3px solid #34495e;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .sequence-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .sequence-button:active {
+            transform: scale(0.95);
+        }
+
+        .sequence-button.correct {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-color: #27ae60;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .sequence-button.wrong {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-color: #c0392b;
+            animation: wrongShake 0.6s ease;
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .sequence-icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .sequence-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .sequence-button.correct .sequence-label,
+        .sequence-button.wrong .sequence-label {
+            color: white;
+        }
+
+        /* Optimización táctil para móviles */
+        @media (max-width: 768px) {
+            body {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .game-title {
+                font-size: 28px;
+                margin-bottom: 10px;
+                padding: 0 10px;
+            }
+            
+            .laboratory {
+                padding: 15px;
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .lab-title {
+                font-size: 22px;
+            }
+            
+            .lab-subtitle {
+                font-size: 13px;
+            }
+            
+            .thermometer-container {
+                width: 50px;
+                height: 250px;
+            }
+            
+            .thermometer {
+                width: 25px;
+                height: 200px;
+            }
+            
+            .thermometer-numbers {
+                right: -20px;
+                font-size: 10px;
+            }
+            
+            .temperature-labels {
+                height: 180px;
+                font-size: 12px;
+            }
+            
+            .temperature-indicator {
+                font-size: 18px;
+                padding: 8px 15px;
+                min-width: 90px;
+            }
+            
+            .container {
+                width: 180px;
+                height: 220px;
+                margin-bottom: 20px;
+            }
+            
+            .goti {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .control-button {
+                width: 100px;
+                height: 100px;
+                font-size: 50px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .controls {
+                gap: 30px;
+                margin: 20px 0;
+            }
+            
+            .status-text {
+                font-size: 22px;
+                bottom: 15px;
+                padding: 10px 20px;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                max-width: 300px;
+            }
+            
+            .memory-card {
+                width: 80px;
+                height: 80px;
+                font-size: 35px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .memory-card .card-back {
+                font-size: 30px;
+            }
+            
+            .memory-card .card-front {
+                font-size: 35px;
+            }
+            
+            .draggable-item {
+                width: 90px;
+                height: 90px;
+                font-size: 45px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .state-category {
+                height: 130px;
+                padding: 15px;
+            }
+            
+            .state-icon {
+                font-size: 60px;
+            }
+            
+            .nav-button {
+                min-width: 120px;
+                padding: 12px 15px;
+                font-size: 14px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .reward-button {
+                padding: 15px 30px;
+                font-size: 18px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            
+            .reset-button {
+                padding: 15px 25px;
+                font-size: 18px;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-title {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+            
+            .laboratory {
+                padding: 12px;
+                margin: 8px;
+            }
+            
+            .lab-title {
+                font-size: 20px;
+            }
+            
+            .lab-subtitle {
+                font-size: 12px;
+            }
+            
+            .thermometer-container {
+                width: 45px;
+                height: 220px;
+            }
+            
+            .thermometer {
+                width: 22px;
+                height: 180px;
+            }
+            
+            .thermometer-numbers {
+                right: -18px;
+                font-size: 9px;
+            }
+            
+            .temperature-labels {
+                height: 160px;
+                font-size: 11px;
+            }
+            
+            .temperature-indicator {
+                font-size: 16px;
+                padding: 6px 12px;
+                min-width: 80px;
+            }
+            
+            .container {
+                width: 160px;
+                height: 200px;
+            }
+            
+            .goti {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .control-button {
+                width: 90px;
+                height: 90px;
+                font-size: 45px;
+            }
+            
+            .controls {
+                gap: 25px;
+            }
+            
+            .status-text {
+                font-size: 20px;
+                bottom: 12px;
+                padding: 8px 15px;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                max-width: 270px;
+            }
+            
+            .memory-card {
+                width: 70px;
+                height: 70px;
+                font-size: 30px;
+            }
+            
+            .memory-card .card-back {
+                font-size: 28px;
+            }
+            
+            .memory-card .card-front {
+                font-size: 30px;
+            }
+            
+            .draggable-item {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+            }
+            
+            .state-category {
+                height: 120px;
+                padding: 12px;
+            }
+            
+            .state-icon {
+                font-size: 50px;
+            }
+            
+            .nav-button {
+                min-width: 100px;
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas más coloridas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Sistema de Recompensas mejorado -->
+    <div class="reward-overlay" id="rewardOverlay">
+        <div class="reward-content">
+            <h2 class="reward-title" id="rewardTitle">¡Felicidades!</h2>
+            <p class="reward-message" id="rewardMessage">Has completado el juego</p>
+            <div class="stars-container" id="starsContainer">
+                <i class="fas fa-star star" id="star1"></i>
+                <i class="fas fa-star star" id="star2"></i>
+                <i class="fas fa-star star" id="star3"></i>
+            </div>
+            <button class="reward-button" id="rewardButton">Continuar</button>
+        </div>
+        <div class="confetti-container" id="confettiContainer"></div>
+    </div>
+
+    <!-- Pantalla de carga mejorada -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-tint"></i></div>
+                <div class="logo-text">S-CALA</div>
+            </div>
+        </div>
+        <div class="brand">EL MUNDO DEL AGUA</div>
+    </div>
+
+    <!-- Navegación mejorada -->
+    <div class="game-nav">
+        <button class="nav-button active" data-game="main">
+            <i class="fas fa-flask"></i> Lab
+        </button>
+        <button class="nav-button" data-game="classification">
+            <i class="fas fa-th-large"></i> Clas
+        </button>
+        <button class="nav-button" data-game="memory">
+            <i class="fas fa-brain"></i> Mem
+        </button>
+        <button class="nav-button" data-game="sequence">
+            <i class="fas fa-list-ol"></i> Sec
+        </button>
+    </div>
+
+    <!-- Escena principal -->
+    <div class="scene">
+        <h1 class="game-title">El Mundo del Agua</h1>
+        
+        <!-- Juego Principal -->
+        <div class="game-container active" id="main-game">
+            <div class="laboratory">
+                <div class="lab-header">
+                    <h2 class="lab-title">Laboratorio de Estados del Agua</h2>
+                    <p class="lab-subtitle">Experimenta con la temperatura</p>
+                </div>
+                
+                <div class="lab-content">
+                    <!-- Termómetro -->
+                    <div class="thermometer-section">
+                        <div class="thermometer-container">
+                            <div class="thermometer">
+                                <div class="mercury" id="mercury"></div>
+                                <div class="explosion" id="explosion">
+                                    <div class="explosion-particles" id="explosionParticles"></div>
+                                </div>
+                            </div>
+                            <div class="thermometer-numbers">
+                                <span>100°</span>
+                                <span>80°</span>
+                                <span>60°</span>
+                                <span>40°</span>
+                                <span>20°</span>
+                                <span>0°</span>
+                            </div>
+                        </div>
+                        <div class="temperature-labels">
+                            <span>🔥</span>
+                            <span>☀️</span>
+                            <span>❄️</span>
+                        </div>
+                        <div class="temperature-indicator" id="temperatureIndicator">Templado</div>
+                    </div>
+
+                    <!-- Agua -->
+                    <div class="water-section">
+                        <div class="container">
+                            <div class="goti" id="goti"></div>
+                            <div class="state-label ice" id="iceLabel">HIELO</div>
+                            <div class="state-label water visible" id="waterLabel">AGUA</div>
+                            <div class="state-label vapor" id="vaporLabel">GAS</div>
+                        </div>
+                        <div class="cloud" id="cloud"></div>
+                        <div class="rain" id="rain"></div>
+                    </div>
+                </div>
+
+                <!-- Controles -->
+                <div class="controls">
+                    <button class="control-button sun-button" id="heatButton">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                    <button class="control-button snow-button" id="coldButton">
+                        <i class="fas fa-snowflake"></i>
+                    </button>
+                </div>
+
+                <!-- Texto de estado -->
+                <div class="status-text" id="statusText">¡Agua!</div>
+            </div>
+        </div>
+        
+        <!-- Juego de Clasificación -->
+        <div class="game-container" id="classification-game">
+            <div class="classification-game">
+                <h2 class="game-instructions">Arrastra los objetos a su estado</h2>
+                
+                <div class="classification-area">
+                    <div class="state-category solid" data-state="solid">
+                        <div class="state-title">Sólido</div>
+                        <div class="state-icon">🧊</div>
+                    </div>
+                    <div class="state-category liquid" data-state="liquid">
+                        <div class="state-title">Líquido</div>
+                        <div class="state-icon">💧</div>
+                    </div>
+                    <div class="state-category gas" data-state="gas">
+                        <div class="state-title">Gaseoso</div>
+                        <div class="state-icon">☁️</div>
+                    </div>
+                </div>
+                
+                <div class="items-container" id="itemsContainer">
+                    <div class="draggable-item" draggable="true" data-state="solid">🧊</div>
+                    <div class="draggable-item" draggable="true" data-state="solid">🧊</div>
+                    <div class="draggable-item" draggable="true" data-state="liquid">💧</div>
+                    <div class="draggable-item" draggable="true" data-state="liquid">💧</div>
+                    <div class="draggable-item" draggable="true" data-state="gas">☁️</div>
+                    <div class="draggable-item" draggable="true" data-state="gas">☁️</div>
+                </div>
+                
+                <div class="game-result" id="classificationResult"></div>
+                <button class="reset-button" id="resetClassification">
+                    <i class="fas fa-redo"></i> Reiniciar
+                </button>
+            </div>
+        </div>
+        
+        <!-- Juego de Memoria -->
+        <div class="game-container" id="memory-game">
+            <div class="memory-game">
+                <h2 class="game-instructions">Encuentra los pares de estados</h2>
+                
+                <div class="memory-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="movesCount">0</div>
+                        <div class="stat-label">Movimientos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="matchesCount">0</div>
+                        <div class="stat-label">Pares</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="timeCount">0</div>
+                        <div class="stat-label">Segundos</div>
+                    </div>
+                </div>
+                
+                <div class="memory-grid" id="memoryGrid">
+                    <!-- Las cartas se generarán con JavaScript -->
+                </div>
+                
+                <div class="game-result" id="memoryResult"></div>
+                <button class="reset-button" id="resetMemory">
+                    <i class="fas fa-redo"></i> Reiniciar
+                </button>
+            </div>
+        </div>
+        
+        <!-- Juego de Secuencia -->
+        <div class="game-container" id="sequence-game">
+            <div class="sequence-game">
+                <h2 class="game-instructions">Toca los estados en el orden correcto</h2>
+                
+                <div class="sequence-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="sequenceLevel">1</div>
+                        <div class="stat-label">Nivel</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="sequenceScore">0</div>
+                        <div class="stat-label">Puntos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="sequenceLives">3</div>
+                        <div class="stat-label">Vidas</div>
+                    </div>
+                </div>
+                
+                <div class="sequence-display" id="sequenceDisplay">
+                    <div class="sequence-pattern" id="sequencePattern"></div>
+                </div>
+                
+                <div class="sequence-controls" id="sequenceControls">
+                    <button class="sequence-button" data-state="solid">
+                        <span class="sequence-icon">🧊</span>
+                        <span class="sequence-label">Hielo</span>
+                    </button>
+                    <button class="sequence-button" data-state="liquid">
+                        <span class="sequence-icon">💧</span>
+                        <span class="sequence-label">Agua</span>
+                    </button>
+                    <button class="sequence-button" data-state="gas">
+                        <span class="sequence-icon">☁️</span>
+                        <span class="sequence-label">Vapor</span>
+                    </button>
+                </div>
+                
+                <div class="game-result" id="sequenceResult"></div>
+                <button class="reset-button" id="resetSequence">
+                    <i class="fas fa-redo"></i> Reiniciar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">Desarrollado por S-CALA para un mejor aprendizaje</div>
+
+    <script>
+        // Crear partículas más coloridas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            const colors = ['rgba(52, 152, 219, 0.4)', 'rgba(155, 89, 182, 0.4)', 'rgba(46, 204, 113, 0.4)', 'rgba(241, 196, 15, 0.4)', 'rgba(231, 76, 60, 0.4)', 'rgba(243, 156, 18, 0.4)'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                
+                const delay = Math.random() * 5;
+                particle.style.animationDelay = `${delay}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Sistema de Recompensas
+        const rewardOverlay = document.getElementById('rewardOverlay');
+        const rewardTitle = document.getElementById('rewardTitle');
+        const rewardMessage = document.getElementById('rewardMessage');
+        const starsContainer = document.getElementById('starsContainer');
+        const rewardButton = document.getElementById('rewardButton');
+        const confettiContainer = document.getElementById('confettiContainer');
+        
+        function showReward(title, message, stars = 3) {
+            rewardTitle.textContent = title;
+            rewardMessage.textContent = message;
+            
+            rewardOverlay.classList.add('active');
+            
+            const starElements = starsContainer.querySelectorAll('.star');
+            starElements.forEach((star, index) => {
+                star.classList.remove('earned');
+                if (index < stars) {
+                    setTimeout(() => {
+                        star.classList.add('earned');
+                    }, index * 300);
+                }
+            });
+            
+            createVictoryCelebration();
+            sounds.win();
+        }
+
+        function createVictoryCelebration() {
+            confettiContainer.innerHTML = '';
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // Crear mensajes de victoria
+            const victoryMessages = ['¡VICTORIA!', '¡GENIAL!', '¡EXCELENTE!', '¡FANTÁSTICO!', '¡INCREÍBLE!', '¡PERFECTO!'];
+            const colors = ['#f1c40f', '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#f39c12'];
+            
+            // Crear 20 mensajes de victoria
+            for (let i = 0; i < 20; i++) {
+                const victoryElement = document.createElement('div');
+                victoryElement.classList.add('victory-message');
+                
+                const message = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                victoryElement.textContent = message;
+                victoryElement.style.color = color;
+                victoryElement.style.fontSize = `${Math.random() * 20 + 30}px`;
+                victoryElement.style.fontWeight = '900';
+                victoryElement.style.textShadow = `0 0 20px ${color}`;
+                
+                // Posición aleatoria
+                victoryElement.style.left = `${Math.random() * screenWidth}px`;
+                victoryElement.style.top = `${Math.random() * screenHeight}px`;
+                
+                // Rotación aleatoria
+                const rotation = Math.random() * 360;
+                victoryElement.style.transform = `rotate(${rotation}deg)`;
+                
+                // Animación
+                const duration = Math.random() * 3 + 4;
+                const delay = Math.random() * 2;
+                victoryElement.style.animation = `victoryCelebration ${duration}s ease-out ${delay}s forwards`;
+                
+                confettiContainer.appendChild(victoryElement);
+            }
+            
+            // Crear confeti simple y alegre
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('victory-confetti');
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.backgroundColor = color;
+                
+                const size = Math.random() * 15 + 10;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                
+                // Forma aleatoria
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                } else {
+                    confetti.style.borderRadius = '0';
+                }
+                
+                // Posición inicial
+                confetti.style.left = `${Math.random() * screenWidth}px`;
+                confetti.style.top = `${-50 - Math.random() * 100}px`;
+                
+                // Animación
+                const duration = Math.random() * 4 + 3;
+                const delay = Math.random() * 2;
+                confetti.style.animation = `victoryConfetti ${duration}s ease-in ${delay}s forwards`;
+                
+                confettiContainer.appendChild(confetti);
+            }
+        }
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            .victory-message {
+                position: fixed;
+                font-family: 'Fredoka', sans-serif;
+                font-weight: 900;
+                text-align: center;
+                pointer-events: none;
+                z-index: 2000;
+                animation: victoryCelebration 4s ease-out forwards;
+            }
+            
+            .victory-confetti {
+                position: fixed;
+                pointer-events: none;
+                z-index: 2000;
+                animation: victoryConfetti 4s ease-in forwards;
+            }
+            
+            @keyframes victoryCelebration {
+                0% {
+                    transform: rotate(0deg) scale(0) translateY(0px);
+                    opacity: 1;
+                }
+                20% {
+                    transform: rotate(180deg) scale(1.2) translateY(-20px);
+                    opacity: 1;
+                }
+                50% {
+                    transform: rotate(360deg) scale(1) translateY(-10px);
+                    opacity: 1;
+                }
+                100% {
+                    transform: rotate(720deg) scale(0.5) translateY(100px);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes victoryConfetti {
+                0% {
+                    transform: translateY(0) rotate(0deg) scale(1);
+                    opacity: 1;
+                }
+                50% {
+                    transform: translateY(50vh) rotate(180deg) scale(1.2);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg) scale(0);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Eventos táctiles para botón de recompensas
+        rewardButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            rewardOverlay.classList.remove('active');
+            confettiContainer.innerHTML = '';
+        });
+        
+        rewardButton.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            rewardOverlay.classList.remove('active');
+            confettiContainer.innerHTML = '';
+        }, { passive: false });
+        
+        // Elementos del DOM
+        const loadingScreen = document.getElementById('loadingScreen');
+        const goti = document.getElementById('goti');
+        const mercury = document.getElementById('mercury');
+        const explosion = document.getElementById('explosion');
+        const cloud = document.getElementById('cloud');
+        const rain = document.getElementById('rain');
+        const heatButton = document.getElementById('heatButton');
+        const coldButton = document.getElementById('coldButton');
+        const statusText = document.getElementById('statusText');
+        const temperatureIndicator = document.getElementById('temperatureIndicator');
+        const iceLabel = document.getElementById('iceLabel');
+        const waterLabel = document.getElementById('waterLabel');
+        const vaporLabel = document.getElementById('vaporLabel');
+
+        // Estados del agua
+        const states = {
+            LIQUID: 'liquid',
+            SOLID: 'solid',
+            GAS: 'gas'
+        };
+
+        let currentState = states.LIQUID;
+        let temperature = 30;
+        let heatInterval = null;
+        let coldInterval = null;
+        let visitedStates = new Set([states.LIQUID]);
+        let audioContext = null;
+
+        // Audio mejorado
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            gainNode.gain.value = 0.001;
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES';
+                utterance.rate = 0.9;
+                utterance.pitch = 1.2;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playSound(frequency, duration, type = 'sine') {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function playTrainHorn() {
+            if (!audioContext) return;
+            
+            const oscillator1 = audioContext.createOscillator();
+            const oscillator2 = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator1.connect(filter);
+            oscillator2.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator1.type = 'sawtooth';
+            oscillator2.type = 'square';
+            
+            oscillator1.frequency.setValueAtTime(200, audioContext.currentTime);
+            oscillator1.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+            oscillator1.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 1.5);
+            
+            oscillator2.frequency.setValueAtTime(150, audioContext.currentTime);
+            oscillator2.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.5);
+            oscillator2.frequency.exponentialRampToValueAtTime(150, audioContext.currentTime + 1.5);
+            
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, audioContext.currentTime);
+            filter.frequency.exponentialRampToValueAtTime(3000, audioContext.currentTime + 0.5);
+            filter.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 1.5);
+            
+            gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 2);
+            
+            oscillator1.start();
+            oscillator2.start();
+            oscillator1.stop(audioContext.currentTime + 2);
+            oscillator2.stop(audioContext.currentTime + 2);
+        }
+
+        function playRainSound() {
+            if (!audioContext) return;
+            
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    const filter = audioContext.createBiquadFilter();
+                    
+                    oscillator.connect(filter);
+                    filter.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.type = 'sine';
+                    oscillator.frequency.value = 300 + Math.random() * 500;
+                    filter.type = 'highpass';
+                    filter.frequency.value = 1000;
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                }, i * 100);
+            }
+        }
+
+        function explodeThermometer() {
+            stopHeating();
+            explosion.classList.add('active');
+            createExplosionParticles();
+            playTrainHorn();
+            
+            statusText.textContent = "¡Boom! Termómetro explotó";
+            statusText.style.background = "linear-gradient(135deg, #e74c3c, #c0392b)";
+            statusText.style.color = "white";
+            
+            setTimeout(() => {
+                explosion.classList.remove('active');
+                temperature = 30;
+                updateTemperature();
+                statusText.textContent = "¡Agua!";
+                statusText.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8))";
+                statusText.style.color = "#333";
+                currentState = states.LIQUID;
+                goti.classList.remove('ice', 'vapor');
+                cloud.classList.remove('visible');
+            }, 2000);
+        }
+
+        function createExplosionParticles() {
+            const particlesContainer = document.getElementById('explosionParticles');
+            particlesContainer.innerHTML = '';
+            
+            const particleCount = 20;
+            const colors = ['#f1c40f', '#e74c3c', '#e67e22', '#f39c12', '#d35400'];
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('explosion-particle');
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = `radial-gradient(circle, ${color}, ${color}88)`;
+                
+                const angle = (360 / particleCount) * i;
+                const distance = 80 + Math.random() * 40;
+                const dx = Math.cos(angle * Math.PI / 180) * distance;
+                const dy = Math.sin(angle * Math.PI / 180) * distance;
+                
+                particle.style.setProperty('--dx', `${dx}px`);
+                particle.style.setProperty('--dy', `${dy}px`);
+                
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.transform = 'translate(-50%, -50%)';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Vibración háptica para móviles
+        function vibrate(pattern = [100]) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        // Sonidos mejorados con vibración
+        const sounds = {
+            water: () => {
+                speak("¡Agua!");
+                playSound(440, 0.5, 'triangle');
+                vibrate([50]);
+            },
+            ice: () => {
+                speak("¡Hielo!");
+                playSound(220, 0.8, 'square');
+                vibrate([100, 50, 100]);
+            },
+            vapor: () => {
+                speak("¡Vapor!");
+                playSound(880, 0.6, 'sine');
+                vibrate([30, 30, 30]);
+            },
+            freeze: () => {
+                playSound(150, 1.0, 'sawtooth');
+                setTimeout(() => playSound(200, 0.8, 'square'), 200);
+                vibrate([200, 100, 200]);
+            },
+            melt: () => {
+                playSound(300, 0.7, 'triangle');
+                setTimeout(() => playSound(250, 0.5, 'sine'), 300);
+                vibrate([100, 50]);
+            },
+            evaporate: () => {
+                playSound(600, 0.4, 'sine');
+                setTimeout(() => playSound(800, 0.3, 'sine'), 200);
+                setTimeout(() => playSound(1000, 0.2, 'sine'), 400);
+                vibrate([50, 50, 50, 50]);
+            },
+            rain: () => {
+                playRainSound();
+                vibrate([20, 20, 20, 20, 20]);
+            },
+            correct: () => {
+                playSound(523, 0.2, 'sine');
+                setTimeout(() => playSound(659, 0.2, 'sine'), 100);
+                setTimeout(() => playSound(784, 0.3, 'sine'), 200);
+                vibrate([50, 30, 50]);
+            },
+            wrong: () => {
+                playSound(200, 0.5, 'sawtooth');
+                vibrate([200]);
+            },
+            win: () => {
+                playSound(523, 0.2, 'sine');
+                setTimeout(() => playSound(659, 0.2, 'sine'), 200);
+                setTimeout(() => playSound(784, 0.2, 'sine'), 400);
+                setTimeout(() => playSound(1047, 0.4, 'sine'), 600);
+                vibrate([100, 50, 100, 50, 200]);
+            }
+        };
+
+        // Inicialización
+        window.addEventListener('load', () => {
+            createParticles();
+            initAudio();
+            
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                sounds.water();
+                initGames();
+            }, 3000);
+        });
+
+        // Eventos táctiles optimizados para móviles
+        function addTouchEvents(element, startEvent, endEvent) {
+            // Eventos de mouse para desktop
+            element.addEventListener('mousedown', startEvent);
+            element.addEventListener('mouseup', endEvent);
+            element.addEventListener('mouseleave', endEvent);
+            
+            // Eventos táctiles para móviles
+            element.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startEvent();
+            }, { passive: false });
+            
+            element.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                endEvent();
+            }, { passive: false });
+            
+            element.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                endEvent();
+            }, { passive: false });
+        }
+
+        // Aplicar eventos táctiles a los botones de control
+        addTouchEvents(heatButton, startHeating, stopHeating);
+        addTouchEvents(coldButton, startCooling, stopCooling);
+
+        // Eventos para la nube (click y touch)
+        cloud.addEventListener('click', (e) => {
+            e.preventDefault();
+            makeItRain();
+        });
+        
+        cloud.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            makeItRain();
+        }, { passive: false });
+
+        function startHeating() {
+            stopCooling();
+            heatInterval = setInterval(() => {
+                if (temperature < 100) {
+                    temperature += 2;
+                    updateTemperature();
+                    checkStateChange();
+                } else {
+                    // En lugar de explotar, hacer llover automáticamente
+                    makeItRainAutomatically();
+                }
+            }, 100);
+        }
+
+        function stopHeating() {
+            clearInterval(heatInterval);
+        }
+
+        function startCooling() {
+            stopHeating();
+            coldInterval = setInterval(() => {
+                if (temperature > 0) {
+                    temperature -= 2;
+                    updateTemperature();
+                    checkStateChange();
+                }
+            }, 100);
+        }
+
+        function stopCooling() {
+            clearInterval(coldInterval);
+        }
+
+        function updateTemperature() {
+            mercury.style.height = `${temperature}%`;
+            
+            if (temperature <= 20) {
+                mercury.style.background = 'linear-gradient(to top, #2980b9, #3498db, #5dade2)';
+                mercury.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.6)';
+                temperatureIndicator.textContent = "🧊 Hielo";
+                temperatureIndicator.style.background = 'rgba(52, 152, 219, 0.2)';
+                temperatureIndicator.style.color = '#2980b9';
+            } else if (temperature <= 40) {
+                mercury.style.background = 'linear-gradient(to top, #2ecc71, #27ae60, #16a085)';
+                mercury.style.boxShadow = '0 0 20px rgba(46, 204, 113, 0.6)';
+                temperatureIndicator.textContent = "❄️ Frío";
+                temperatureIndicator.style.background = 'rgba(46, 204, 113, 0.2)';
+                temperatureIndicator.style.color = '#27ae60';
+            } else if (temperature <= 60) {
+                mercury.style.background = 'linear-gradient(to top, #f39c12, #f1c40f, #f4d03f)';
+                mercury.style.boxShadow = '0 0 20px rgba(243, 156, 18, 0.6)';
+                temperatureIndicator.textContent = "🌡️ Templado";
+                temperatureIndicator.style.background = 'rgba(243, 156, 18, 0.2)';
+                temperatureIndicator.style.color = '#f39c12';
+            } else if (temperature <= 80) {
+                mercury.style.background = 'linear-gradient(to top, #e67e22, #d35400, #e74c3c)';
+                mercury.style.boxShadow = '0 0 20px rgba(230, 126, 34, 0.6)';
+                temperatureIndicator.textContent = "🔥 Tibio";
+                temperatureIndicator.style.background = 'rgba(230, 126, 34, 0.2)';
+                temperatureIndicator.style.color = '#d35400';
+            } else if (temperature < 100) {
+                mercury.style.background = 'linear-gradient(to top, #c0392b, #e74c3c, #ec7063)';
+                mercury.style.boxShadow = '0 0 20px rgba(231, 76, 60, 0.6)';
+                temperatureIndicator.textContent = "🌋 Caliente";
+                temperatureIndicator.style.background = 'rgba(231, 76, 60, 0.2)';
+                temperatureIndicator.style.color = '#c0392b';
+            } else {
+                mercury.style.background = 'linear-gradient(to top, #8e44ad, #9b59b6, #bb8fce)';
+                mercury.style.boxShadow = '0 0 25px rgba(142, 68, 173, 0.8)';
+                temperatureIndicator.textContent = "💥 ¡EXPLOTA!";
+                temperatureIndicator.style.background = 'rgba(142, 68, 173, 0.3)';
+                temperatureIndicator.style.color = '#8e44ad';
+                temperatureIndicator.style.animation = 'pulse 0.5s infinite';
+            }
+        }
+
+        function checkStateChange() {
+            if (temperature <= 10 && currentState !== states.SOLID) {
+                freezeWater();
+            } else if (temperature > 10 && temperature < 90 && currentState !== states.LIQUID) {
+                meltWater();
+            } else if (temperature >= 90 && temperature !== 100 && currentState !== states.GAS) {
+                evaporateWater();
+            }
+        }
+
+        function freezeWater() {
+            currentState = states.SOLID;
+            goti.classList.add('ice');
+            goti.classList.remove('vapor');
+            cloud.classList.remove('visible');
+            statusText.textContent = "¡Hielo!";
+            statusText.style.background = "rgba(52, 152, 219, 0.2)";
+            statusText.style.color = "#2980b9";
+            sounds.ice();
+            sounds.freeze();
+            
+            iceLabel.classList.add('visible');
+            waterLabel.classList.remove('visible');
+            vaporLabel.classList.remove('visible');
+            
+            visitedStates.add(states.SOLID);
+            checkLabReward();
+        }
+
+        function meltWater() {
+            currentState = states.LIQUID;
+            goti.classList.remove('ice', 'vapor');
+            cloud.classList.remove('visible');
+            statusText.textContent = "¡Agua!";
+            statusText.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8))";
+            statusText.style.color = "#333";
+            sounds.water();
+            sounds.melt();
+            
+            iceLabel.classList.remove('visible');
+            waterLabel.classList.add('visible');
+            vaporLabel.classList.remove('visible');
+            
+            visitedStates.add(states.LIQUID);
+            checkLabReward();
+        }
+
+        function evaporateWater() {
+            currentState = states.GAS;
+            goti.classList.add('vapor');
+            goti.classList.remove('ice');
+            cloud.classList.add('visible');
+            statusText.textContent = "¡Vapor!";
+            statusText.style.background = "rgba(243, 156, 18, 0.2)";
+            statusText.style.color = "#f39c12";
+            sounds.vapor();
+            sounds.evaporate();
+            
+            iceLabel.classList.remove('visible');
+            waterLabel.classList.remove('visible');
+            vaporLabel.classList.add('visible');
+            
+            visitedStates.add(states.GAS);
+            checkLabReward();
+        }
+
+        function checkLabReward() {
+            if (visitedStates.size === 3) {
+                setTimeout(() => {
+                    showReward(
+                        "¡Científico Experto!",
+                        "Has descubierto los tres estados del agua",
+                        3
+                    );
+                    visitedStates.clear();
+                    visitedStates.add(currentState);
+                }, 1000);
+            }
+        }
+
+        function makeItRain() {
+            if (currentState === states.GAS) {
+                rain.innerHTML = '';
+                for (let i = 0; i < 40; i++) {
+                    const raindrop = document.createElement('div');
+                    raindrop.classList.add('raindrop');
+                    raindrop.style.left = `${Math.random() * 100}%`;
+                    raindrop.style.animationDelay = `${Math.random() * 1}s`;
+                    rain.appendChild(raindrop);
+                }
+                
+                rain.classList.add('visible');
+                sounds.rain();
+                
+                setTimeout(() => {
+                    rain.classList.remove('visible');
+                    cloud.classList.remove('visible');
+                    goti.classList.remove('vapor');
+                    currentState = states.LIQUID;
+                    temperature = 30;
+                    updateTemperature();
+                    statusText.textContent = "¡Agua!";
+                    statusText.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8))";
+                    statusText.style.color = "#333";
+                    sounds.water();
+                    
+                    iceLabel.classList.remove('visible');
+                    waterLabel.classList.add('visible');
+                    vaporLabel.classList.remove('visible');
+                    
+                    visitedStates.add(states.LIQUID);
+                    checkLabReward();
+                }, 3000);
+            }
+        }
+
+        function makeItRainAutomatically() {
+            stopHeating();
+            
+            // Mostrar mensaje especial
+            statusText.textContent = "¡Nube llena! ¡Lluvia!";
+            statusText.style.background = "linear-gradient(135deg, #3498db, #2980b9)";
+            statusText.style.color = "white";
+            
+            // Crear lluvia más intensa
+            rain.innerHTML = '';
+            for (let i = 0; i < 60; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.classList.add('raindrop');
+                raindrop.style.left = `${Math.random() * 100}%`;
+                raindrop.style.animationDelay = `${Math.random() * 1.5}s`;
+                rain.appendChild(raindrop);
+            }
+            
+            rain.classList.add('visible');
+            sounds.rain();
+            
+            // Hacer que la nube se evapore
+            cloud.classList.add('evaporating');
+            
+            setTimeout(() => {
+                rain.classList.remove('visible');
+                cloud.classList.remove('visible', 'evaporating');
+                goti.classList.remove('vapor');
+                currentState = states.LIQUID;
+                temperature = 30;
+                updateTemperature();
+                statusText.textContent = "¡Agua!";
+                statusText.style.background = "linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8))";
+                statusText.style.color = "#333";
+                sounds.water();
+                
+                iceLabel.classList.remove('visible');
+                waterLabel.classList.add('visible');
+                vaporLabel.classList.remove('visible');
+                
+                visitedStates.add(states.LIQUID);
+                checkLabReward();
+            }, 4000);
+        }
+
+        function initGames() {
+            initClassificationGame();
+            initMemoryGame();
+            initSequenceGame();
+            initGameNavigation();
+        }
+
+        function initGameNavigation() {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const gameContainers = document.querySelectorAll('.game-container');
+            
+            navButtons.forEach(button => {
+                function switchGame() {
+                    const targetGame = button.dataset.game;
+                    
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    gameContainers.forEach(container => {
+                        container.classList.remove('active');
+                        if (container.id === `${targetGame}-game`) {
+                            container.classList.add('active');
+                        }
+                    });
+                }
+                
+                // Eventos para desktop y móvil
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchGame();
+                });
+                
+                button.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    switchGame();
+                }, { passive: false });
+            });
+        }
+
+        // Juego de Clasificación COMPLETO con soporte táctil
+        function initClassificationGame() {
+            const draggableItems = document.querySelectorAll('.draggable-item');
+            const stateCategories = document.querySelectorAll('.state-category');
+            const resetButton = document.getElementById('resetClassification');
+            const resultDiv = document.getElementById('classificationResult');
+            
+            let correctCount = 0;
+            let totalItems = draggableItems.length;
+            let errorCount = 0;
+            let draggedElement = null;
+            let touchStartPos = null;
+            
+            function resetClassificationGame() {
+                correctCount = 0;
+                errorCount = 0;
+                resultDiv.textContent = '';
+                
+                const itemsContainer = document.getElementById('itemsContainer');
+                const items = Array.from(draggableItems);
+                
+                for (let i = items.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [items[i], items[j]] = [items[j], items[i]];
+                }
+                
+                items.forEach(item => {
+                    itemsContainer.appendChild(item);
+                    item.style.opacity = '1';
+                    item.style.pointerEvents = 'auto';
+                    item.classList.remove('correct', 'dragging');
+                    item.draggable = true;
+                    item.style.transform = 'none';
+                    item.style.zIndex = 'auto';
+                });
+            }
+            
+            // Eventos para botón de reset
+            resetButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetClassificationGame();
+            });
+            
+            resetButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                resetClassificationGame();
+            }, { passive: false });
+            
+            // Eventos de drag and drop para desktop
+            draggableItems.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', item.dataset.state);
+                    item.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', () => {
+                    item.classList.remove('dragging');
+                });
+            });
+            
+            // Eventos táctiles para móviles
+            draggableItems.forEach(item => {
+                item.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (item.classList.contains('correct')) return;
+                    
+                    draggedElement = item;
+                    touchStartPos = {
+                        x: e.touches[0].clientX,
+                        y: e.touches[0].clientY
+                    };
+                    
+                    item.classList.add('dragging');
+                    item.style.transform = 'scale(1.1)';
+                    item.style.zIndex = '1000';
+                    item.style.transition = 'none';
+                }, { passive: false });
+                
+                item.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    if (!draggedElement || draggedElement !== item) return;
+                    
+                    const touch = e.touches[0];
+                    const deltaX = touch.clientX - touchStartPos.x;
+                    const deltaY = touch.clientY - touchStartPos.y;
+                    
+                    item.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.1)`;
+                    
+                    // Verificar si está sobre una categoría
+                    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const category = elementBelow?.closest('.state-category');
+                    
+                    // Remover highlight de todas las categorías
+                    stateCategories.forEach(cat => cat.classList.remove('drag-over'));
+                    
+                    // Agregar highlight a la categoría actual
+                    if (category) {
+                        category.classList.add('drag-over');
+                    }
+                }, { passive: false });
+                
+                item.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    if (!draggedElement || draggedElement !== item) return;
+                    
+                    const touch = e.changedTouches[0];
+                    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const category = elementBelow?.closest('.state-category');
+                    
+                    if (category) {
+                        handleDrop(item, category);
+                    } else {
+                        // Volver a la posición original
+                        item.style.transform = 'none';
+                    }
+                    
+                    item.classList.remove('dragging');
+                    item.style.zIndex = 'auto';
+                    item.style.transition = 'all 0.3s ease';
+                    
+                    // Remover highlight de todas las categorías
+                    stateCategories.forEach(cat => cat.classList.remove('drag-over'));
+                    
+                    draggedElement = null;
+                    touchStartPos = null;
+                }, { passive: false });
+            });
+            
+            // Eventos de drop para desktop
+            stateCategories.forEach(category => {
+                category.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    category.classList.add('drag-over');
+                });
+                
+                category.addEventListener('dragleave', () => {
+                    category.classList.remove('drag-over');
+                });
+                
+                category.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    category.classList.remove('drag-over');
+                    
+                    const draggedState = e.dataTransfer.getData('text/plain');
+                    const targetState = category.dataset.state;
+                    const draggedElement = document.querySelector('.draggable-item.dragging');
+                    
+                    if (draggedElement) {
+                        handleDrop(draggedElement, category);
+                    }
+                });
+            });
+            
+            function handleDrop(item, category) {
+                const draggedState = item.dataset.state;
+                const targetState = category.dataset.state;
+                
+                if (draggedState === targetState) {
+                    item.classList.add('correct');
+                    item.style.opacity = '0.7';
+                    item.style.pointerEvents = 'none';
+                    item.draggable = false;
+                    item.style.transform = 'none';
+                    
+                    correctCount++;
+                    sounds.correct();
+                    
+                    if (correctCount === totalItems) {
+                        let stars = 3;
+                        if (errorCount >= 3) {
+                            stars = 1;
+                        } else if (errorCount >= 1) {
+                            stars = 2;
+                        }
+                        
+                        showReward(
+                            "¡Clasificación Perfecta!",
+                            `Has clasificado todos los objetos con ${errorCount} errores`,
+                            stars
+                        );
+                    }
+                } else {
+                    errorCount++;
+                    sounds.wrong();
+                    resultDiv.textContent = "¡Inténtalo de nuevo!";
+                    resultDiv.style.color = "#e74c3c";
+                    
+                    setTimeout(() => {
+                        resultDiv.textContent = '';
+                    }, 1500);
+                }
+            }
+            
+            resetClassificationGame();
+        }
+
+        // Juego de Memoria COMPLETO
+        function initMemoryGame() {
+            const memoryGrid = document.getElementById('memoryGrid');
+            const resetButton = document.getElementById('resetMemory');
+            const resultDiv = document.getElementById('memoryResult');
+            const movesCount = document.getElementById('movesCount');
+            const matchesCount = document.getElementById('matchesCount');
+            const timeCount = document.getElementById('timeCount');
+            
+            const cardSymbols = ['🧊', '🧊', '💧', '💧', '☁️', '☁️', '🌊', '🌊'];
+            let cards = [];
+            let flippedCards = [];
+            let matchedPairs = 0;
+            let moves = 0;
+            let seconds = 0;
+            let gameTimer = null;
+            let canFlip = true;
+            
+            function createCards() {
+                memoryGrid.innerHTML = '';
+                cards = [];
+                flippedCards = [];
+                matchedPairs = 0;
+                moves = 0;
+                seconds = 0;
+                canFlip = true;
+                
+                movesCount.textContent = '0';
+                matchesCount.textContent = '0';
+                timeCount.textContent = '0';
+                resultDiv.textContent = '';
+                
+                const shuffledSymbols = [...cardSymbols];
+                for (let i = shuffledSymbols.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffledSymbols[i], shuffledSymbols[j]] = [shuffledSymbols[j], shuffledSymbols[i]];
+                }
+                
+                shuffledSymbols.forEach((symbol, index) => {
+                    const card = document.createElement('div');
+                    card.classList.add('memory-card');
+                    card.dataset.symbol = symbol;
+                    card.dataset.index = index;
+                    
+                    const cardBack = document.createElement('div');
+                    cardBack.classList.add('card-back');
+                    cardBack.textContent = '?';
+                    
+                    const cardFront = document.createElement('div');
+                    cardFront.classList.add('card-front');
+                    cardFront.textContent = symbol;
+                    
+                    card.appendChild(cardBack);
+                    card.appendChild(cardFront);
+                    
+                    // Eventos para desktop y móvil
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        flipCard(card);
+                    });
+                    
+                    card.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        flipCard(card);
+                    }, { passive: false });
+                    
+                    memoryGrid.appendChild(card);
+                    cards.push(card);
+                });
+                
+                startTimer();
+            }
+            
+            function startTimer() {
+                if (gameTimer) clearInterval(gameTimer);
+                
+                gameTimer = setInterval(() => {
+                    seconds++;
+                    timeCount.textContent = seconds;
+                }, 1000);
+            }
+            
+            function flipCard(card) {
+                if (!canFlip || flippedCards.length >= 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                    return;
+                }
+                
+                card.classList.add('flipped');
+                flippedCards.push(card);
+                
+                if (flippedCards.length === 2) {
+                    canFlip = false;
+                    moves++;
+                    movesCount.textContent = moves;
+                    
+                    checkMatch();
+                }
+            }
+            
+            function checkMatch() {
+                const [card1, card2] = flippedCards;
+                const match = card1.dataset.symbol === card2.dataset.symbol;
+                
+                if (match) {
+                    setTimeout(() => {
+                        card1.classList.add('matched');
+                        card2.classList.add('matched');
+                        matchedPairs++;
+                        matchesCount.textContent = matchedPairs;
+                        
+                        sounds.correct();
+                        
+                        if (matchedPairs === cardSymbols.length / 2) {
+                            clearInterval(gameTimer);
+                            
+                            let stars = 1;
+                            let message = `Has completado el juego en ${moves} movimientos y ${seconds} segundos.`;
+                            
+                            if (moves <= 20 && seconds <= 60) {
+                                stars = 3;
+                                message = "¡Rendimiento Excelente! " + message;
+                            } else if (moves <= 30 || seconds <= 90) {
+                                stars = 2;
+                                message = "¡Buen Trabajo! " + message;
+                            }
+                            
+                            showReward(
+                                "¡Memoria Increíble!",
+                                message,
+                                stars
+                            );
+                        }
+                        
+                        flippedCards = [];
+                        canFlip = true;
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        card1.classList.remove('flipped');
+                        card2.classList.remove('flipped');
+                        flippedCards = [];
+                        canFlip = true;
+                    }, 1000);
+                }
+            }
+            
+            // Eventos para botón de reset
+            resetButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                createCards();
+            });
+            
+            resetButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                createCards();
+            }, { passive: false });
+            createCards();
+        }
+
+        // Juego de Secuencia COMPLETO
+        function initSequenceGame() {
+            const sequencePattern = document.getElementById('sequencePattern');
+            const sequenceButtons = document.querySelectorAll('.sequence-button');
+            const resetButton = document.getElementById('resetSequence');
+            const resultDiv = document.getElementById('sequenceResult');
+            const levelDisplay = document.getElementById('sequenceLevel');
+            const scoreDisplay = document.getElementById('sequenceScore');
+            const livesDisplay = document.getElementById('sequenceLives');
+            
+            let currentPattern = [];
+            let playerSequence = [];
+            let currentLevel = 1;
+            let score = 0;
+            let lives = 3;
+            let isShowingPattern = false;
+            let isPlayerTurn = false;
+            
+            const stateIcons = {
+                solid: '🧊',
+                liquid: '💧',
+                gas: '☁️'
+            };
+            
+            function resetSequenceGame() {
+                currentPattern = [];
+                playerSequence = [];
+                currentLevel = 1;
+                score = 0;
+                lives = 3;
+                isShowingPattern = false;
+                isPlayerTurn = false;
+                
+                updateDisplay();
+                resultDiv.textContent = '';
+                startNewLevel();
+            }
+            
+            function updateDisplay() {
+                levelDisplay.textContent = currentLevel;
+                scoreDisplay.textContent = score;
+                livesDisplay.textContent = lives;
+            }
+            
+            function startNewLevel() {
+                // Agregar un nuevo estado al patrón
+                const states = ['solid', 'liquid', 'gas'];
+                const newState = states[Math.floor(Math.random() * states.length)];
+                currentPattern.push(newState);
+                
+                // Mostrar el patrón
+                showPattern();
+            }
+            
+            function showPattern() {
+                isShowingPattern = true;
+                isPlayerTurn = false;
+                sequencePattern.innerHTML = '';
+                
+                // Crear elementos del patrón
+                currentPattern.forEach((state, index) => {
+                    const item = document.createElement('div');
+                    item.classList.add('sequence-pattern-item');
+                    item.textContent = stateIcons[state];
+                    item.dataset.state = state;
+                    sequencePattern.appendChild(item);
+                });
+                
+                // Animar el patrón
+                let currentIndex = 0;
+                const animatePattern = () => {
+                    if (currentIndex < currentPattern.length) {
+                        const items = sequencePattern.querySelectorAll('.sequence-pattern-item');
+                        items.forEach(item => item.classList.remove('active'));
+                        
+                        if (items[currentIndex]) {
+                            items[currentIndex].classList.add('active');
+                            sounds.correct();
+                        }
+                        
+                        currentIndex++;
+                        setTimeout(animatePattern, 800);
+                    } else {
+                        // Patrón completo, ahora es turno del jugador
+                        setTimeout(() => {
+                            items.forEach(item => item.classList.remove('active'));
+                            isShowingPattern = false;
+                            isPlayerTurn = true;
+                            playerSequence = [];
+                        }, 500);
+                    }
+                };
+                
+                setTimeout(animatePattern, 1000);
+            }
+            
+            function handlePlayerInput(state) {
+                if (!isPlayerTurn || isShowingPattern) return;
+                
+                playerSequence.push(state);
+                const currentIndex = playerSequence.length - 1;
+                
+                if (playerSequence[currentIndex] === currentPattern[currentIndex]) {
+                    // Correcto
+                    const button = document.querySelector(`[data-state="${state}"]`);
+                    button.classList.add('correct');
+                    sounds.correct();
+                    
+                    setTimeout(() => {
+                        button.classList.remove('correct');
+                    }, 300);
+                    
+                    if (playerSequence.length === currentPattern.length) {
+                        // Nivel completado
+                        score += currentLevel * 10;
+                        currentLevel++;
+                        updateDisplay();
+                        
+                        resultDiv.textContent = `¡Nivel ${currentLevel - 1} completado! +${(currentLevel - 1) * 10} puntos`;
+                        resultDiv.style.color = "#2ecc71";
+                        
+                        setTimeout(() => {
+                            resultDiv.textContent = '';
+                            startNewLevel();
+                        }, 1500);
+                    }
+                } else {
+                    // Incorrecto
+                    const button = document.querySelector(`[data-state="${state}"]`);
+                    button.classList.add('wrong');
+                    sounds.wrong();
+                    
+                    setTimeout(() => {
+                        button.classList.remove('wrong');
+                    }, 300);
+                    
+                    lives--;
+                    updateDisplay();
+                    
+                    if (lives <= 0) {
+                        // Game Over
+                        let stars = 1;
+                        if (score >= 100) stars = 2;
+                        if (score >= 200) stars = 3;
+                        
+                        showReward(
+                            "¡Juego Completado!",
+                            `Puntuación final: ${score} puntos`,
+                            stars
+                        );
+                        
+                        setTimeout(() => {
+                            resetSequenceGame();
+                        }, 2000);
+                    } else {
+                        resultDiv.textContent = `¡Incorrecto! Vidas restantes: ${lives}`;
+                        resultDiv.style.color = "#e74c3c";
+                        
+                        setTimeout(() => {
+                            resultDiv.textContent = '';
+                            playerSequence = [];
+                        }, 1500);
+                    }
+                }
+            }
+            
+            // Eventos para botones de secuencia
+            sequenceButtons.forEach(button => {
+                function handleClick() {
+                    const state = button.dataset.state;
+                    handlePlayerInput(state);
+                }
+                
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleClick();
+                });
+                
+                button.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleClick();
+                }, { passive: false });
+            });
+            
+            // Evento para botón de reset
+            resetButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetSequenceGame();
+            });
+            
+            resetButton.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                resetSequenceGame();
+            }, { passive: false });
+            
+            // Iniciar el juego
+            resetSequenceGame();
+        }
+    </script>
+</body>
+</html>
